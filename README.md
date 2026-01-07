@@ -19,32 +19,42 @@ This project is intentionally designed to resemble a **real-world production ML 
 
 ## 🏗️ System Architecture
 
-┌──────────────────┐
-│ React Dashboard │
-│ (Frontend UI) │
-└────────┬─────────┘
-│ REST API
-┌────────▼─────────┐
-│ FastAPI Service │
-│ - /predict │
-│ - /health │
-│ - SHAP explain │
-└────────┬─────────┘
-│
-┌────────▼─────────┐
-│ Trained Model │
-│ - XGBoost │
-│ - Feature Schema│
-│ - Metrics │
-└────────┬─────────┘
-│
-┌────────▼─────────┐
-│ ML Pipeline │
-│ - Feature Engg │
-│ - Training │
-│ - Evaluation │
-└──────────────────┘
 
++-----------------------+
+|   React Dashboard     |
+|  (frontend_dashboard) |
++----------+------------+
+           |
+           | HTTP (REST)
+           v
++-----------------------+
+|     FastAPI Service   |
+|      (ml-service)     |
+|  - /predict           |
+|  - /health            |
+|  - SHAP explanation   |
++----------+------------+
+           |
+           | Loads model + schema
+           v
++-----------------------+
+|   Model Artifacts     |
+| (ml-service/artifacts)|
+|  - model.joblib       |
+|  - feature_schema.json|
+|  - metrics.json       |
++----------+------------+
+           ^
+           |
+           | Training + evaluation
+           |
++----------+------------+
+|    ML Training        |
+|     (ml-pipeline)     |
+|  - feature engg       |
+|  - train_xgb.py       |
+|  - notebook           |
++-----------------------+
 
 
 ## 🧠 Machine Learning Details
@@ -137,15 +147,4 @@ JavaScript
 Recharts
 Axios
 
-🚀 Run Locally
-1️⃣ Start ML API
 
-cd ml-service
-pip install -r requirements.txt
-uvicorn main:app --reload
-
-2️⃣ Start Frontend
-bash
-
-npm install
-npm start
